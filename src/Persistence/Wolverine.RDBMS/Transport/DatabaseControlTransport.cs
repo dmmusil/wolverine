@@ -125,7 +125,10 @@ internal class DatabaseControlTransport : ITransport, IAsyncDisposable
                 builder.Append(";");
             }
 
-            await builder.ExecuteNonQueryAsync(conn, cancellationToken);
+            var command = builder.Compile();
+            command.Connection = conn;
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
 
         await conn.CloseAsync();
